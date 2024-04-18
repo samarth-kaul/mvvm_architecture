@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+// import 'package:http/http.dart';
 import 'package:mvvm_architecture/data/app_exceptions.dart';
 import 'package:mvvm_architecture/data/network/base_api_services.dart';
 
@@ -13,17 +13,19 @@ class NetworkApiService extends BaseApiServices {
       final response =
           await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
       responseJson = returnResponse(response);
+      return responseJson;
     } on SocketException {
       throw FetchDataException("No Internet Connection");
     }
-    return responseJson;
+    // return responseJson;
   }
 
   @override
   Future getPostApiResponse(String url, dynamic data) async {
     dynamic responseJson;
     try {
-      Response response = await post(Uri.parse(url), body: data)
+      var response = await http
+          .post(Uri.parse(url), body: data)
           .timeout(const Duration(seconds: 10));
     } on SocketException {
       throw FetchDataException("No Internet Connection");

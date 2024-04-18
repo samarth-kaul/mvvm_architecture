@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mvvm_architecture/resources/components/round_button.dart';
 import 'package:mvvm_architecture/utils/routes/routes_name.dart';
 import 'package:mvvm_architecture/utils/routes/utils.dart';
+import 'package:mvvm_architecture/view_model/auth_view_model.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -31,6 +33,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
     return SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -86,6 +89,7 @@ class _LoginViewState extends State<LoginView> {
                   height: 50,
                 ),
                 RoundButton(
+                  isLoading: authViewModel.loading,
                   title: "Login",
                   onPress: () {
                     if (emailCtor.text.isEmpty) {
@@ -97,6 +101,11 @@ class _LoginViewState extends State<LoginView> {
                       Utils.flushBarErrorMessage(
                           "Password should be atleast 6 characterrs", context);
                     } else {
+                      Map data = {
+                        "email": emailCtor.text,
+                        "password": passwordCtor.text,
+                      };
+                      authViewModel.loginApi(data, context);
                       print("api hit");
                     }
                   },
